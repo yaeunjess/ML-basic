@@ -1,7 +1,8 @@
 ## ML-basic
 
 </head><body><article id="a35afb17-4dd0-47e3-bcd4-cdaf7cff76b2" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">1️⃣</span></div><h1 class="page-title">MNIST Classification</h1><p class="page-description"></p></header><div class="page-body"><h3 id="f5bbf481-5b05-4256-9c3e-20e2909ec625" class="">목표</h3><p id="fee2cb39-362f-4c8a-9173-11e76b05cbc2" class="">0~9까지의 손글씨에 대한 MNIST 데이터셋을 통해 모델을 학습시킨 후 손글씨에 대한 classification 성능을 accuracy로 확인</p><h3 id="b08fb462-a5b6-4be4-8584-b81c12200bb0" class="">핵심</h3><p id="01a6c576-9472-48a0-857e-c1cf8561d449" class="">✅ 모델 구축</p><p id="83271743-e014-40aa-b942-9b05c44e8d3c" class="">✅ 모델 학습에서의 데이터 증강</p><p id="11c72ca7-cb72-49b1-9ff8-3f9c762eeeeb" class="">✅ 성능 향상을 위한 기법 도입</p><p id="b2d8b92c-7de1-47c0-9e7a-90c480b1773b" class="">✅ 튜닝을 통한 변수 결정</p><h3 id="4b588a97-6e63-431a-a26b-8d726739ae57" class="">모델 구조</h3>
-![Untitled](https://github.com/yaeunjess/ML-basic/assets/138097446/0d6be25a-f115-429c-8553-98ba7e8a5e82)
+
+![Untitled](https://github.com/yaeunjess/ML-basic/assets/138097446/30fa8a4e-cbe8-4ec5-bbd1-90d6bb3b9015)
 
 </a></figure><pre id="df583b77-ceee-4d5c-83dc-749db13e32fe" class="code"><code class="language-Python">class CNN(nn.Module):
     def __init__(self):
@@ -64,10 +65,39 @@ class CNN(nn.Module):
         self.dropout = nn.Dropout(0.5) # dropout
         .
         .
-        (생략)</code></pre></li></ol><ol type="1" id="d38136b3-d26e-4617-ab83-a56e423e5672" class="numbered-list" start="3"><li><strong>stepLR</strong> <strong>스케줄러</strong><figure id="3049bc25-45d1-4d2d-9206-2dda57890cef" 
-                                                                                                                                                            class="code"><code class="language-Python"># StepLR 스케줄러 설정 방법
+        (생략)</code></pre></li>
+<ol>
+    <li>
+        <strong>Dropout</strong>
+        <figure id="3049bc25-45d1-4d2d-9206-2dda57890cef">
+            <img src="https://github.com/yaeunjess/ML-basic/assets/138097446/0b98f37b-ac7a-4373-84d0-eedf4173ee5a" alt="Untitled 2" />
+        </figure>
+    </li>
+    <li>
+        <strong>stepLR</strong> 
+        <strong>BatchNorm</strong>
+        <figure id="3049bc25-45d1-4d2d-9206-2dda57890cef">
+            <img src="https://github.com/yaeunjess/ML-basic/assets/138097446/744acd7d-0691-40e3-8558-c9370b624637" alt="Untitled 3" />
+            <img src="https://github.com/yaeunjess/ML-basic/assets/138097446/dafb76ab-56a8-4a42-9e0e-e45180633cd0" alt="Untitled 4" />
+        </figure>
+    </li>
+</ol>
+
+                                       
+<ol start="3">
+    <li>
+        <strong>stepLR</strong> <strong>스케줄러</strong>
+        <figure id="3049bc25-45d1-4d2d-9206-2dda57890cef">
+            <img src="https://github.com/yaeunjess/ML-basic/assets/138097446/f4ae0d6c-fe58-43b7-8635-d22e03f10d5c" alt="Untitled 5"/>
+        </figure>
+        <pre class="code"><code class="language-Python"># StepLR 스케줄러 설정 방법
 optimizer = optim.Adam(model.parameters(), lr=0.00108)
-scheduler = StepLR(optimizer, step_size=4, gamma=0.5)</code></pre></li></ol><h3 id="2c4c8be2-0839-4964-808a-21f397f0a144" class="">모델 튜닝을 통한 변수 설정</h3><ol type="1" id="b755391f-4618-4bb4-a7fb-c005871259d9" class="numbered-list" start="1"><li><code>batch_size</code> = 100<p id="10a7be94-ed09-476d-b884-6b4d40a2a6b4" class="">64~128 사이로 튜닝을 하다가, 가운데 값인 100으로 설정</p></li></ol><ol type="1" id="dcf81a5b-f727-4b8a-9733-f170c03624ce" class="numbered-list" start="2"><li><code>epoch</code> = 25<p id="acb7b30c-e7fe-4b96-9cf1-3f78476588b3" class="">30을 기준으로 하여 최대 성능이 나오는 지점 부근으로 epoch을 수정했다.</p></li></ol><ol type="1" id="bef3c1d9-2016-4199-918c-3fe3df09d720" class="numbered-list" start="3"><li><code>learning_rate</code> = 0.00108<p id="bf346712-5db1-4562-ba12-174b0076b492" class="">0.001 기준으로 튜닝했다.</p></li></ol><ol type="1" id="050445cf-6fd4-43af-99e9-50d9d822d4fc" class="numbered-list" start="4"><li><code>step_size</code> = 4, <code>gamma</code>= 0.5</li></ol><h3 id="28cccdfe-4443-4fcc-9e23-98df9fa2efa6" class="">데이터 증강</h3><ol type="1" id="0fa2aa6f-3dd5-47c9-bfc7-3ea664873262" class="numbered-list" start="1"><li>데이터 회전 각도 : -13~13도<p id="a030269a-0235-41f3-a7df-7c20c3be4cbc" class="">회전 각에 대해서도 변화를 주고 싶어, 모델이 test했을때 틀린 이미지를 저장하여 확인해가면서 회전 각을 정했다.</p><figure id="0404998c-45d8-49f8-8e81-4d945a93a900"  class="">Randominvert 함수를 이용해 색상 반전을 해보았는데, 효과가 없었다.</p><figure id="287eb2dc-84a9-4b74-b8f5-ef0c0e517cca" class="">ColorJitter 함수를 이용해 이미지의 밝기, 채도 등 컬러 관련 속성들을 변경해봤는데, 효과가 없었다.</p><figure id="145b3da5-ebc4-4873-bfac-a011958abb91" class="">모델별 성능 비교 - optimizer(SGD vs Adam), batch normalization 유무</h3><div id="79f268e4-79b9-4997-9de7-c63acea04590" class="column-list"><div id="ca7080f1-ef00-4ed0-a8eb-61e1358a36a8" style="width:50%" class="column"><figure id="10a66bfd-c099-44e8-bbed-6d71b238c877" class="column-list"><div id="707d3305-efd6-4082-b2b9-f9d8d380a5bd" style="width:50%" class="column"><figure id="af48b0ef-a432-4379-9ce6-db3f8c8192fb"  class="column-list"><div id="0d3c5c53-b3b4-404a-8c39-085181d2a3aa" style="width:50%" class="column"><figure id="96da1668-9aa1-48be-abc5-44e7e475ec3e" class="column"><figure id="e45bfc85-b7d9-4587-a896-dec72878357f"  class="">
+scheduler = StepLR(optimizer, step_size=4, gamma=0.5)</code></pre>
+    </li>
+</ol>
+<h3 id="2c4c8be2-0839-4964-808a-21f397f0a144">...</h3>
+
+<h3 class="">모델 튜닝을 통한 변수 설정</h3><ol type="1" id="b755391f-4618-4bb4-a7fb-c005871259d9" class="numbered-list" start="1"><li><code>batch_size</code> = 100<p id="10a7be94-ed09-476d-b884-6b4d40a2a6b4" class="">64~128 사이로 튜닝을 하다가, 가운데 값인 100으로 설정</p></li></ol><ol type="1" id="dcf81a5b-f727-4b8a-9733-f170c03624ce" class="numbered-list" start="2"><li><code>epoch</code> = 25<p id="acb7b30c-e7fe-4b96-9cf1-3f78476588b3" class="">30을 기준으로 하여 최대 성능이 나오는 지점 부근으로 epoch을 수정했다.</p></li></ol><ol type="1" id="bef3c1d9-2016-4199-918c-3fe3df09d720" class="numbered-list" start="3"><li><code>learning_rate</code> = 0.00108<p id="bf346712-5db1-4562-ba12-174b0076b492" class="">0.001 기준으로 튜닝했다.</p></li></ol><ol type="1" id="050445cf-6fd4-43af-99e9-50d9d822d4fc" class="numbered-list" start="4"><li><code>step_size</code> = 4, <code>gamma</code>= 0.5</li></ol><h3 id="28cccdfe-4443-4fcc-9e23-98df9fa2efa6" class="">데이터 증강</h3><ol type="1" id="0fa2aa6f-3dd5-47c9-bfc7-3ea664873262" class="numbered-list" start="1"><li>데이터 회전 각도 : -13~13도<p id="a030269a-0235-41f3-a7df-7c20c3be4cbc" class="">회전 각에 대해서도 변화를 주고 싶어, 모델이 test했을때 틀린 이미지를 저장하여 확인해가면서 회전 각을 정했다.</p><figure id="0404998c-45d8-49f8-8e81-4d945a93a900"  class="">Randominvert 함수를 이용해 색상 반전을 해보았는데, 효과가 없었다.</p><figure id="287eb2dc-84a9-4b74-b8f5-ef0c0e517cca" class="">ColorJitter 함수를 이용해 이미지의 밝기, 채도 등 컬러 관련 속성들을 변경해봤는데, 효과가 없었다.</p><figure id="145b3da5-ebc4-4873-bfac-a011958abb91" class="">모델별 성능 비교 - optimizer(SGD vs Adam), batch normalization 유무</h3><div id="79f268e4-79b9-4997-9de7-c63acea04590" class="column-list"><div id="ca7080f1-ef00-4ed0-a8eb-61e1358a36a8" style="width:50%" class="column"><figure id="10a66bfd-c099-44e8-bbed-6d71b238c877" class="column-list"><div id="707d3305-efd6-4082-b2b9-f9d8d380a5bd" style="width:50%" class="column"><figure id="af48b0ef-a432-4379-9ce6-db3f8c8192fb"  class="column-list"><div id="0d3c5c53-b3b4-404a-8c39-085181d2a3aa" style="width:50%" class="column"><figure id="96da1668-9aa1-48be-abc5-44e7e475ec3e" class="column"><figure id="e45bfc85-b7d9-4587-a896-dec72878357f"  class="">
 </p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
 
 
