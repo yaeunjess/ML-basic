@@ -1,6 +1,6 @@
 ## ML-basic
 
-</style></head><body><article id="a35afb17-4dd0-47e3-bcd4-cdaf7cff76b2" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">1️⃣</span></div><h1 class="page-title">MNIST Classification</h1><p class="page-description"></p></header><div class="page-body"><h3 id="f5bbf481-5b05-4256-9c3e-20e2909ec625" class="">목표</h3><p id="fee2cb39-362f-4c8a-9173-11e76b05cbc2" class="">0~9까지의 손글씨에 대한 MNIST 데이터셋을 통해 모델을 학습시킨 후 손글씨에 대한 classification 성능을 accuracy로 확인</p><h3 id="b08fb462-a5b6-4be4-8584-b81c12200bb0" class="">핵심</h3><p id="01a6c576-9472-48a0-857e-c1cf8561d449" class="">✅ 모델 구축</p><p id="83271743-e014-40aa-b942-9b05c44e8d3c" class="">✅ 모델 학습에서의 데이터 증강</p><p id="11c72ca7-cb72-49b1-9ff8-3f9c762eeeeb" class="">✅ 성능 향상을 위한 기법 도입</p><p id="b2d8b92c-7de1-47c0-9e7a-90c480b1773b" class="">✅ 튜닝을 통한 변수 결정</p><h3 id="4b588a97-6e63-431a-a26b-8d726739ae57" class="">모델 구조</h3><figure id="ae7f8d1d-f644-4cff-a3f8-3a23dc9d3afe" class="image"><a href="MNIST%20Classification%20a35afb174dd047e3bcd4cdaf7cff76b2/Untitled.png"><img style="width:622px"  class="code"><code class="language-Python">class CNN(nn.Module):
+</style></head><body><article id="a35afb17-4dd0-47e3-bcd4-cdaf7cff76b2" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">1️⃣</span></div><h1 class="page-title">MNIST Classification</h1><p class="page-description"></p></header><div class="page-body"><h3 id="f5bbf481-5b05-4256-9c3e-20e2909ec625" class="">목표</h3><p id="fee2cb39-362f-4c8a-9173-11e76b05cbc2" class="">0~9까지의 손글씨에 대한 MNIST 데이터셋을 통해 모델을 학습시킨 후 손글씨에 대한 classification 성능을 accuracy로 확인</p><h3 id="b08fb462-a5b6-4be4-8584-b81c12200bb0" class="">핵심</h3><p id="01a6c576-9472-48a0-857e-c1cf8561d449" class="">✅ 모델 구축</p><p id="83271743-e014-40aa-b942-9b05c44e8d3c" class="">✅ 모델 학습에서의 데이터 증강</p><p id="11c72ca7-cb72-49b1-9ff8-3f9c762eeeeb" class="">✅ 성능 향상을 위한 기법 도입</p><p id="b2d8b92c-7de1-47c0-9e7a-90c480b1773b" class="">✅ 튜닝을 통한 변수 결정</p><h3 id="4b588a97-6e63-431a-a26b-8d726739ae57" class="">모델 구조</h3><figure id="ae7f8d1d-f644-4cff-a3f8-3a23dc9d3afe" class="image"><a href="MNIST%20Classification%20a35afb174dd047e3bcd4cdaf7cff76b2/Untitled.png"><img style="width:622px" src="MNIST%20Classification%20a35afb174dd047e3bcd4cdaf7cff76b2/Untitled.png"/></a></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="df583b77-ceee-4d5c-83dc-749db13e32fe" class="code"><code class="language-Python">class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
         self.conv1 = nn.Sequential(
@@ -24,6 +24,15 @@
         self.relu = nn.ReLU()                 
         self.dropout = nn.Dropout(0.5)        
         self.softmax = nn.LogSoftmax(dim=1)   
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.conv2(x)
+
+        x = x.view(x.size(0), -1)  
+        x = self.relu(self.fc1(x))
+        x = self.dropout(x)
+        x = self.softmax(self.fc2(x))
 
     def forward(self, x):
         x = self.conv1(x)
